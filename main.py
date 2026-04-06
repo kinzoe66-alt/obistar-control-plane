@@ -7,7 +7,7 @@ from interaction.steps.response_execution import execute
 user_input = input('> ')
 signals = interpret(user_input)
 confidence = evaluate(signals)
-reasoning_output = reason(signals, confidence)
+reasoning_output = reason(user_input, signals, confidence)
 response_type = select(confidence, signals, reasoning_output)
 response = execute(response_type, user_input)
 

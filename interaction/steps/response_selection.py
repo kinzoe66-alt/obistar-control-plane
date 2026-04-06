@@ -15,10 +15,7 @@ def select(confidence, signals, reasoning_output):
         if task_type == 'COMPUTE':
             return 'act'
 
-        if task_type == 'BUILD':
-            return 'guide'
-
-        if task_type == 'EXPLAIN':
+        if task_type in ['BUILD', 'EXPLAIN']:
             return 'guide'
 
         return 'ask'
