@@ -2,5 +2,7 @@ def select(confidence):
     if confidence == 'low':
         return 'ask'
     if confidence == 'medium':
-        return 'ask'
-    return 'guide'
+        return 'guide'
+    if confidence == 'high':
+        return 'act'
+    return 'ask'
