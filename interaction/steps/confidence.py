@@ -9,4 +9,3 @@ def evaluate(signals):
         return 'medium'
 
     return 'high'
-

@@ -5,4 +5,3 @@ def interpret(text):
         'intent_strength': 'high',
         'correction_signal': False
     }
-
