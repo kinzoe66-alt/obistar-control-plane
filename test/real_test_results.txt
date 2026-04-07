@@ -1,0 +1,10 @@
+=== REAL SYSTEM TEST ===
+Test 1: no memory
+{'signals': {'alignment': 'low', 'clarity': 'medium', 'intent_strength': 'high', 'correction_signal': False}, 'confidence': 'medium', 'reasoning': {'situation': 'INVALID', 'task_type': 'BUILD'}, 'response_type': 'reject', 'response': "I can't perform 'continue building it' — that request is outside my capabilities."}
+Test 2: create memory
+{'signals': {'alignment': 'high', 'clarity': 'medium', 'intent_strength': 'high', 'correction_signal': False}, 'confidence': 'high', 'reasoning': {'situation': 'VALID_ACTION', 'task_type': 'BUILD'}, 'response_type': 'guide', 'response': 'Starting system build for: build an api'}
+Test 3: use memory
+{'signals': {'alignment': 'low', 'clarity': 'medium', 'intent_strength': 'high', 'correction_signal': False}, 'confidence': 'medium', 'reasoning': {'situation': 'VALID_ACTION', 'task_type': 'BUILD', 'context_used': True}, 'response_type': 'guide', 'response': 'Starting system build for: continue building it'}
+Test 4: no memory usage expected
+{'signals': {'alignment': 'low', 'clarity': 'medium', 'intent_strength': 'medium', 'correction_signal': False}, 'confidence': 'low', 'reasoning': {'situation': 'VALID_ACTION', 'task_type': 'EXPLAIN'}, 'response_type': 'guide', 'response': 'Starting system build for: what is python'}
+=== DONE ===
