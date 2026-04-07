@@ -4,50 +4,40 @@ import sys
 
 MEMORY_PATH = "memory/memory.json"
 
-
-# ---------------- MEMORY ---------------- #
-
 def load_memory():
     if not os.path.exists(MEMORY_PATH):
-        return {
-            "history": [],
-            "execution_history": []
-        }
+        return {"history": [], "execution_history": []}
     with open(MEMORY_PATH, "r") as f:
         return json.load(f)
-
 
 def save_memory(memory):
     os.makedirs(os.path.dirname(MEMORY_PATH), exist_ok=True)
     with open(MEMORY_PATH, "w") as f:
         json.dump(memory, f, indent=2)
 
-
-# ---------------- INTERPRET ---------------- #
-
 def interpret(user_input):
     words = user_input.lower().split()
-
     return {
-        "alignment": "high" if "build" in words else "low",
+        "alignment": "high" if any(w.startswith("build") for w in words) else "low",
         "clarity": "high" if len(words) > 2 else "medium",
-        "intent_strength": "high" if any(w in words for w in ["build", "create", "make"]) else "medium",
+        "intent_strength": "high" if any(w in words for w in ["build","create","make"]) else "medium",
         "correction_signal": False
     }
 
-
-# ---------------- EVALUATE ---------------- #
-
 def evaluate(signals):
-    if signals["intent_strength"] == "high":
-        return "high"
-    return "medium"
-
-
-# ---------------- REASON ---------------- #
+    return "high" if signals["intent_strength"] == "high" else "medium"
 
 def reason(user_input, signals, confidence, memory):
     user_input_lower = user_input.lower()
+
+    last = memory["execution_history"][-1] if memory["execution_history"] else None
+
+    if "continue" in user_input_lower and last:
+        return {
+            "situation": "VALID_ACTION",
+            "task_type": "BUILD",
+            "context_used": True
+        }
 
     if "build" in user_input_lower:
         return {
@@ -69,38 +59,31 @@ def reason(user_input, signals, confidence, memory):
         "context_used": False
     }
 
-
-# ---------------- SELECT ---------------- #
-
 def select(confidence, signals, reasoning_output):
+    if reasoning_output.get("situation") == "VALID_ACTION" and reasoning_output.get("task_type") == "BUILD":
+        return "guide"
+
     if signals["alignment"] == "high":
         return "guide"
+
     return "fallback"
-
-
-# ---------------- EXECUTE ---------------- #
 
 def execute(response_type, user_input):
     if response_type == "guide":
         return f"Starting system build for: {user_input}"
     return f"I can't perform '{user_input}' — that request is outside my capabilities."
 
-
-# ---------------- CLASSIFY ---------------- #
-
 def classify_outcome(signals, reasoning_output, response):
-    situation = str(reasoning_output.get("situation", "")).upper()
-    task_type = str(reasoning_output.get("task_type", "")).upper()
-    alignment = str(signals.get("alignment", "")).lower()
+    situation = str(reasoning_output.get("situation","")).upper()
+    task_type = str(reasoning_output.get("task_type","")).upper()
+    alignment = str(signals.get("alignment","")).lower()
+    response_lower = response.lower()
 
-    response_lower = response.lower() if isinstance(response, str) else ""
-
-    if "can't perform" in response_lower or "outside my capabilities" in response_lower:
+    if "can't perform" in response_lower:
         return "REJECTED"
 
-    if situation == "VALID_ACTION":
-        if task_type == "BUILD":
-            return "SUCCESS"
+    if situation == "VALID_ACTION" and task_type == "BUILD":
+        return "SUCCESS"
 
     if task_type == "EXPLAIN":
         return "MISALIGNED"
@@ -109,9 +92,6 @@ def classify_outcome(signals, reasoning_output, response):
         return "FAILURE"
 
     return "UNCLASSIFIED"
-
-
-# ---------------- SYSTEM ---------------- #
 
 def run_system(user_input):
     memory = load_memory()
@@ -149,9 +129,6 @@ def run_system(user_input):
         "outcome": outcome
     }
 
-
-# ---------------- ENTRY ---------------- #
-
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         user_input = " ".join(sys.argv[1:])
@@ -159,6 +136,6 @@ if __name__ == "__main__":
     else:
         while True:
             user_input = input(">>> ")
-            if user_input.lower() in ["exit", "quit"]:
+            if user_input.lower() in ["exit","quit"]:
                 break
             print(run_system(user_input))
