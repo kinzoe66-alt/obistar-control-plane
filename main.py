@@ -52,3 +52,13 @@ if __name__ == "__main__":
     else:
         user_input = input("> ")
         print(run_system(user_input))
+
+observation = {
+    "input": user_input,
+    "response_type": response_type,
+    "response": response,
+    "outcome": "UNCLASSIFIED"
+}
+
+memory["execution_history"].append(observation)
+
