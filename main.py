@@ -1,4 +1,6 @@
 import sys
+import json
+import os
 
 from interaction.steps.interpretation import interpret
 from interaction.steps.confidence import evaluate
@@ -6,13 +8,34 @@ from interaction.steps.reasoning import reason
 from interaction.steps.response_selection import select
 from interaction.steps.response_execution import execute
 
+MEMORY_PATH = "memory/memory.json"
+
+def load_memory():
+    if not os.path.exists(MEMORY_PATH):
+        return {"history": []}
+    with open(MEMORY_PATH, "r") as f:
+        return json.load(f)
+
+def save_memory(memory):
+    with open(MEMORY_PATH, "w") as f:
+        json.dump(memory, f, indent=2)
 
 def run_system(user_input):
+    memory = load_memory()
+
     signals = interpret(user_input)
     confidence = evaluate(signals)
     reasoning_output = reason(user_input, signals, confidence)
+
     response_type = select(confidence, signals, reasoning_output)
     response = execute(response_type, user_input)
+
+    memory["history"].append({
+        "input": user_input,
+        "response": response
+    })
+
+    save_memory(memory)
 
     return {
         "signals": signals,
@@ -22,16 +45,10 @@ def run_system(user_input):
         "response": response
     }
 
-
 if __name__ == "__main__":
-    # CLI mode (for testing)
     if len(sys.argv) > 1:
         user_input = " ".join(sys.argv[1:])
-        output = run_system(user_input)
-        print(output)
-
-    # Interactive mode (your current behavior)
+        print(run_system(user_input))
     else:
         user_input = input("> ")
-        output = run_system(user_input)
-        print(output)
+        print(run_system(user_input))
