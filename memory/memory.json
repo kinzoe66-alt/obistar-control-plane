@@ -91,6 +91,18 @@
     {
       "input": "build a system",
       "response": "Starting system build for: build a system"
+    },
+    {
+      "input": "build api",
+      "response": "Starting system build for: build api"
+    },
+    {
+      "input": "continue building it",
+      "response": "I can't perform 'continue building it' \u2014 that request is outside my capabilities."
+    },
+    {
+      "input": "continue building it",
+      "response": "I can't perform 'continue building it' \u2014 that request is outside my capabilities."
     }
   ],
   "execution_history": [
@@ -207,6 +219,24 @@
       "response_type": "guide",
       "response": "Starting system build for: build a system",
       "outcome": "SUCCESS"
+    },
+    {
+      "input": "build api",
+      "response_type": "guide",
+      "response": "Starting system build for: build api",
+      "outcome": "SUCCESS"
+    },
+    {
+      "input": "continue building it",
+      "response_type": "fallback",
+      "response": "I can't perform 'continue building it' \u2014 that request is outside my capabilities.",
+      "outcome": "REJECTED"
+    },
+    {
+      "input": "continue building it",
+      "response_type": "fallback",
+      "response": "I can't perform 'continue building it' \u2014 that request is outside my capabilities.",
+      "outcome": "REJECTED"
     }
   ]
 }
