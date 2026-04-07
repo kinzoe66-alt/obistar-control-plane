@@ -1,3 +1,20 @@
 {
-  "history": []
+  "history": [
+    {
+      "input": "continue building it",
+      "response": "I can't perform 'continue building it' \u2014 that request is outside my capabilities."
+    },
+    {
+      "input": "build an api",
+      "response": "Starting system build for: build an api"
+    },
+    {
+      "input": "continue building it",
+      "response": "Starting system build for: continue building it"
+    },
+    {
+      "input": "what is python",
+      "response": "Starting system build for: what is python"
+    }
+  ]
 }
