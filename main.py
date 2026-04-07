@@ -25,7 +25,7 @@ def run_system(user_input):
 
     signals = interpret(user_input)
     confidence = evaluate(signals)
-    reasoning_output = reason(user_input, signals, confidence)
+    reasoning_output = reason(user_input, signals, confidence, memory)
 
     response_type = select(confidence, signals, reasoning_output)
     response = execute(response_type, user_input)
