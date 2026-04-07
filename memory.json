@@ -1,0 +1,36 @@
+{
+  "history": [
+    {
+      "input": "build api",
+      "response": "Starting system build for: build api"
+    },
+    {
+      "input": "continue building it",
+      "response": "Starting system build for: continue building it"
+    },
+    {
+      "input": "what is python",
+      "response": "Starting system build for: what is python"
+    }
+  ],
+  "execution_history": [
+    {
+      "input": "build api",
+      "response_type": "guide",
+      "response": "Starting system build for: build api",
+      "outcome": "SUCCESS"
+    },
+    {
+      "input": "continue building it",
+      "response_type": "guide",
+      "response": "Starting system build for: continue building it",
+      "outcome": "SUCCESS"
+    },
+    {
+      "input": "what is python",
+      "response_type": "guide",
+      "response": "Starting system build for: what is python",
+      "outcome": "MISALIGNED"
+    }
+  ]
+}

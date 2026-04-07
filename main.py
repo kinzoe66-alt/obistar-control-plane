@@ -1,14 +1,11 @@
-import sys
 import json
 import os
-
-from interaction.steps.interpretation import interpret
-from interaction.steps.confidence import evaluate
-from interaction.steps.reasoning import reason
-from interaction.steps.response_selection import select
-from interaction.steps.response_execution import execute
+import sys
 
 MEMORY_PATH = "memory/memory.json"
+
+
+# ---------------- MEMORY ---------------- #
 
 def load_memory():
     if not os.path.exists(MEMORY_PATH):
@@ -17,19 +14,104 @@ def load_memory():
             "execution_history": []
         }
     with open(MEMORY_PATH, "r") as f:
-        memory = json.load(f)
+        return json.load(f)
 
-    if "execution_history" not in memory:
-        memory["execution_history"] = []
-
-    if "history" not in memory:
-        memory["history"] = []
-
-    return memory
 
 def save_memory(memory):
+    os.makedirs(os.path.dirname(MEMORY_PATH), exist_ok=True)
     with open(MEMORY_PATH, "w") as f:
         json.dump(memory, f, indent=2)
+
+
+# ---------------- INTERPRET ---------------- #
+
+def interpret(user_input):
+    words = user_input.lower().split()
+
+    return {
+        "alignment": "high" if "build" in words else "low",
+        "clarity": "high" if len(words) > 2 else "medium",
+        "intent_strength": "high" if any(w in words for w in ["build", "create", "make"]) else "medium",
+        "correction_signal": False
+    }
+
+
+# ---------------- EVALUATE ---------------- #
+
+def evaluate(signals):
+    if signals["intent_strength"] == "high":
+        return "high"
+    return "medium"
+
+
+# ---------------- REASON ---------------- #
+
+def reason(user_input, signals, confidence, memory):
+    user_input_lower = user_input.lower()
+
+    if "build" in user_input_lower:
+        return {
+            "situation": "VALID_ACTION",
+            "task_type": "BUILD",
+            "context_used": len(memory["history"]) > 0
+        }
+
+    if "what is" in user_input_lower:
+        return {
+            "situation": "UNKNOWN",
+            "task_type": "EXPLAIN",
+            "context_used": False
+        }
+
+    return {
+        "situation": "UNKNOWN",
+        "task_type": "UNKNOWN",
+        "context_used": False
+    }
+
+
+# ---------------- SELECT ---------------- #
+
+def select(confidence, signals, reasoning_output):
+    if signals["alignment"] == "high":
+        return "guide"
+    return "fallback"
+
+
+# ---------------- EXECUTE ---------------- #
+
+def execute(response_type, user_input):
+    if response_type == "guide":
+        return f"Starting system build for: {user_input}"
+    return f"I can't perform '{user_input}' — that request is outside my capabilities."
+
+
+# ---------------- CLASSIFY ---------------- #
+
+def classify_outcome(signals, reasoning_output, response):
+    situation = str(reasoning_output.get("situation", "")).upper()
+    task_type = str(reasoning_output.get("task_type", "")).upper()
+    alignment = str(signals.get("alignment", "")).lower()
+
+    response_lower = response.lower() if isinstance(response, str) else ""
+
+    if "can't perform" in response_lower or "outside my capabilities" in response_lower:
+        return "REJECTED"
+
+    if situation == "VALID_ACTION":
+        if task_type == "BUILD":
+            return "SUCCESS"
+
+    if task_type == "EXPLAIN":
+        return "MISALIGNED"
+
+    if alignment == "low":
+        return "FAILURE"
+
+    return "UNCLASSIFIED"
+
+
+# ---------------- SYSTEM ---------------- #
 
 def run_system(user_input):
     memory = load_memory()
@@ -41,16 +123,16 @@ def run_system(user_input):
     response_type = select(confidence, signals, reasoning_output)
     response = execute(response_type, user_input)
 
-    # ✅ observation INSIDE function
+    outcome = classify_outcome(signals, reasoning_output, response)
+
     observation = {
         "input": user_input,
         "response_type": response_type,
         "response": response,
-        "outcome": "UNCLASSIFIED"
+        "outcome": outcome
     }
 
     memory["execution_history"].append(observation)
-
     memory["history"].append({
         "input": user_input,
         "response": response
@@ -63,13 +145,20 @@ def run_system(user_input):
         "confidence": confidence,
         "reasoning": reasoning_output,
         "response_type": response_type,
-        "response": response
+        "response": response,
+        "outcome": outcome
     }
+
+
+# ---------------- ENTRY ---------------- #
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         user_input = " ".join(sys.argv[1:])
         print(run_system(user_input))
     else:
-        user_input = input("> ")
-        print(run_system(user_input))
+        while True:
+            user_input = input(">>> ")
+            if user_input.lower() in ["exit", "quit"]:
+                break
+            print(run_system(user_input))

@@ -51,6 +51,46 @@
     {
       "input": "what is python",
       "response": "Starting system build for: what is python"
+    },
+    {
+      "input": "build api",
+      "response": "Starting system build for: build api"
+    },
+    {
+      "input": "continue building it",
+      "response": "Starting system build for: continue building it"
+    },
+    {
+      "input": "what is python",
+      "response": "Starting system build for: what is python"
+    },
+    {
+      "input": "build api",
+      "response": "Starting system build for: build api"
+    },
+    {
+      "input": "continue building it",
+      "response": "I can't perform 'continue building it' \u2014 that request is outside my capabilities."
+    },
+    {
+      "input": "what is python",
+      "response": "I can't perform 'what is python' \u2014 that request is outside my capabilities."
+    },
+    {
+      "input": "build api",
+      "response": "Starting system build for: build api"
+    },
+    {
+      "input": "continue building it",
+      "response": "I can't perform 'continue building it' \u2014 that request is outside my capabilities."
+    },
+    {
+      "input": "what is python",
+      "response": "I can't perform 'what is python' \u2014 that request is outside my capabilities."
+    },
+    {
+      "input": "build a system",
+      "response": "Starting system build for: build a system"
     }
   ],
   "execution_history": [
@@ -107,6 +147,66 @@
       "response_type": "guide",
       "response": "Starting system build for: what is python",
       "outcome": "UNCLASSIFIED"
+    },
+    {
+      "input": "build api",
+      "response_type": "guide",
+      "response": "Starting system build for: build api",
+      "outcome": "SUCCESS"
+    },
+    {
+      "input": "continue building it",
+      "response_type": "guide",
+      "response": "Starting system build for: continue building it",
+      "outcome": "SUCCESS"
+    },
+    {
+      "input": "what is python",
+      "response_type": "guide",
+      "response": "Starting system build for: what is python",
+      "outcome": "MISALIGNED"
+    },
+    {
+      "input": "build api",
+      "response_type": "guide",
+      "response": "Starting system build for: build api",
+      "outcome": "SUCCESS"
+    },
+    {
+      "input": "continue building it",
+      "response_type": "fallback",
+      "response": "I can't perform 'continue building it' \u2014 that request is outside my capabilities.",
+      "outcome": "REJECTED"
+    },
+    {
+      "input": "what is python",
+      "response_type": "fallback",
+      "response": "I can't perform 'what is python' \u2014 that request is outside my capabilities.",
+      "outcome": "REJECTED"
+    },
+    {
+      "input": "build api",
+      "response_type": "guide",
+      "response": "Starting system build for: build api",
+      "outcome": "SUCCESS"
+    },
+    {
+      "input": "continue building it",
+      "response_type": "fallback",
+      "response": "I can't perform 'continue building it' \u2014 that request is outside my capabilities.",
+      "outcome": "REJECTED"
+    },
+    {
+      "input": "what is python",
+      "response_type": "fallback",
+      "response": "I can't perform 'what is python' \u2014 that request is outside my capabilities.",
+      "outcome": "REJECTED"
+    },
+    {
+      "input": "build a system",
+      "response_type": "guide",
+      "response": "Starting system build for: build a system",
+      "outcome": "SUCCESS"
     }
   ]
 }
