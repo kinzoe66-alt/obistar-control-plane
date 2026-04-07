@@ -7,6 +7,17 @@ def reason(user_input, signals, confidence, memory):
     correction = signals.get('correction_signal')
 
     task_type = classify(user_input)
+    # --- MEMORY DECISION (non-keyword) ---
+
+    use_memory = False
+
+    if clarity == "low" or task_type == "UNKNOWN":
+
+        if memory.get("history"):
+
+            use_memory = True
+
+
     history = memory.get("history", [])
 
     last = history[-1] if history else None
@@ -15,7 +26,7 @@ def reason(user_input, signals, confidence, memory):
 
     if last:
 
-        if "continue" in user_input.lower():
+        if use_memory or "continue" in user_input.lower():
 
             return {
 
